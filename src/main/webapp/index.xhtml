@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/components"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>JSF Starter</title>
+</h:head>
+
+<h:body>
+
+	<h1>Hello JSF-Kurs</h1>
+	<h:form id="myForm">
+		    
+		<h:outputLabel value="Bitte Namen eingeben:" />
+		<h:inputText value="#{hello.name}" required="true" id="name">
+			<f:ajax event="blur" render="msgName name2" />
+		</h:inputText>
+		<h:message for="name" id="msgName" />
+
+		<br />
+		<h:outputLabel value="Bitte Namen eingeben:" />
+		<h:inputText value="#{hello.name}" id="name2" />
+
+		<br />
+		<h:outputLabel value="Bitte Alter eingeben:" />
+		<h:inputText value="#{hello.age}" id="age"
+			validatorMessage="Wert muss zwischen 0 und 125 liegen!"
+			converterMessage="Es sind nur Zahlen von 0 bis 125 zulässig!">
+			<f:ajax render="msgAge" />
+		</h:inputText>
+		<h:message for="age" id="msgAge" />
+
+		<br />
+		<co:labeledText label="Alter in eigene Komponente:" 
+		    value="#{hello.age}"/>
+
+		<br />
+		<h:outputLabel value="Bitte Punkt eingeben:" />
+		<h:inputText value="#{hello.point}" id="point">
+			<f:ajax render="msgPoint" />
+			<f:converter converterId="PointConverter" />
+		</h:inputText>
+		<h:message for="point" id="msgPoint" />
+
+		<br />
+		<h:commandButton action="hello.xhtml?faces-redirect=true"
+			value="Say Hello" />
+		<br />
+
+		<div jsf:id="b1" style="width: 12em; display: inline-block;">
+			<h:commandButton action="#{buttonManager.showButton2()}" id="button1"
+				value="Zeige 2" rendered="#{buttonManager.button1visible}">
+				<f:ajax render="b1 b2" />
+			</h:commandButton>
+		</div>
+
+
+		<div jsf:id="b2" style="width: 12em; display: inline-block;">
+			<h:commandButton action="#{buttonManager.showButton1()}" id="button2"
+				value="Zeige 1" rendered="#{not buttonManager.button1visible}">
+				<f:ajax render="b1 b2" />
+			</h:commandButton>
+		</div>
+
+		<h:selectOneMenu id="productShort"
+			title="Bitte ein Produkt (Versicherung) wählen" required="true"
+			requiredMessage="Auswahl erforderlich"
+			value="#{insurance.insuranceType}" hideNoSelectionOption="true">
+			<f:selectItem itemLabel="Bitte wählen..." itemValue="#{0}"
+				noSelectionOption="true" />
+			<f:selectItem itemLabel="LV" itemValue="#{1}" />
+			<f:selectItem itemLabel="KV" itemValue="#{2}" />
+			<f:ajax render="product insuranceType" />
+		</h:selectOneMenu>
+
+		<h:selectOneMenu id="product"
+			title="Bitte ein Produkt (Versicherung) wählen" required="true"
+			requiredMessage="Auswahl erforderlich"
+			value="#{insurance.insuranceType}" hideNoSelectionOption="true">
+			<f:selectItem itemLabel="Bitte wählen..." itemValue="#{0}"
+				noSelectionOption="true" />
+			<f:selectItems value="#{insurance.items}" var="item"
+				itemLabel="#{item.label}" itemValue="#{item.value}" />
+			<f:ajax render="productShort insuranceType" />
+		</h:selectOneMenu>
+
+		<h:outputLabel value="Typ:" />
+		<h:outputText id="insuranceType" value="#{insurance.insuranceType}" />
+
+		<h:dataTable value="#{insurance.items}" var="item">
+			<h:column>
+				<f:facet name="header">Vers.Typ</f:facet>
+				<h:outputText value="#{item.value}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Bezeichnung</f:facet>
+				<h:outputText value="#{item.label}"/>
+			</h:column>
+		</h:dataTable>
+
+	</h:form>
+</h:body>
+</html>
+
